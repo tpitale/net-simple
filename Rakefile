@@ -2,24 +2,22 @@ require 'rubygems'
 require 'rake/gempackagetask'
 require 'rake/testtask'
 
-require 'lib/net_simple/version'
+require 'lib/net/simple/version'
 
 task :default => :test
 
 spec = Gem::Specification.new do |s|
-  s.name             = 'net-simple'
-  s.version          = NetSimple::Version.to_s
-  s.has_rdoc         = true
-  s.extra_rdoc_files = %w(README.rdoc)
-  s.rdoc_options     = %w(--main README.rdoc)
-  s.summary          = "This gem does ... "
-  s.author           = 'First Last'
-  s.email            = 'user@example.com'
-  s.homepage         = 'http://my-site.net'
-  s.files            = %w(README.rdoc Rakefile) + Dir.glob("{lib,test}/**/*")
-  # s.executables    = ['net-simple']
-  
-  # s.add_dependency('gem_name', '~> 0.0.1')
+  s.name            = 'net-simple'
+  s.version         = NetSimple::Version.to_s
+  s.summary         = "Simple wrapper for net/ssh and net/scp"
+  s.author          = 'Tony Pitale'
+  s.email           = 'tpitale@gmail.com'
+  s.homepage        = 'http://t.pitale.com'
+  s.files           = %w(README.textile Rakefile) + Dir.glob("lib/**/*")
+  s.test_files      = Dir.glob("test/**/*_test.rb")
+
+  s.add_dependency('net-ssh', '~> 2.0.10')
+  s.add_dependency('net-scp', '~> 1.0.1')
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
@@ -37,4 +35,16 @@ task :github do
   file = File.dirname(__FILE__) + "/#{spec.name}.gemspec"
   File.open(file, 'w') {|f| f << spec.to_ruby }
   puts "Created gemspec: #{file}"
+end
+
+begin
+  require 'rcov/rcovtask'
+  
+  desc "Generate RCov coverage report"
+  Rcov::RcovTask.new(:rcov) do |t|
+    t.test_files = FileList['test/**/*_test.rb']
+    t.rcov_opts << "-x lib/net/simple/version.rb"
+  end
+rescue LoadError
+  nil
 end

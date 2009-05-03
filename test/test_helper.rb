@@ -3,8 +3,7 @@ $:.reject! { |e| e.include? 'TextMate' }
 
 require 'rubygems'
 require 'test/unit'
-require 'matchy'
-require 'context'
+require 'shoulda'
 require 'mocha'
 
-require File.dirname(__FILE__) + '/../lib/net_simple'
+require File.dirname(__FILE__) + '/../lib/net/simple'
